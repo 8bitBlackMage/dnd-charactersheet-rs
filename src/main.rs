@@ -2,8 +2,10 @@ use iced::{
         Alignment::Center, alignment::Horizontal::Left,
              widget::{Column, button, column, row, text, text_input}};
 
-
+mod statblocks;
 mod character;
+mod level;
+
 use crate::character::Character;
 
 #[derive(Clone)]
@@ -27,6 +29,7 @@ impl Application {
                                 class:"Warrior".to_string(), 
                                 subclass:"".to_string(), 
                                 species: "Half Elf".to_string()
+                                
                             }
     } }
     fn update(&mut self, message: Message)
