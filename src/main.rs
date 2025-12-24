@@ -1,22 +1,17 @@
 use iced::{
-        Alignment::Center, alignment::Horizontal::Left,
-             widget::{Column, button, column, row, text, text_input}};
+        Alignment::Center, Element, Length, alignment::Horizontal::Left, widget::{button, column, container, row, text, text_input}};
 
 mod statblocks;
 mod character;
 mod level;
+mod messages;
+
+mod gui;
+
+
 
 use crate::character::Character;
-
-#[derive(Clone)]
-enum Message{
-    NameChanged(String),
-    ClassChanged(String),
-    SubclassChanged(String),
-    SpeciesChanged(String),
-    SaveToFile,
-}
-
+use crate::messages::Message;
 #[derive(Default)]
 struct Application {
     character: Character
@@ -32,7 +27,7 @@ impl Application {
                                 
                             }
     } }
-    fn update(&mut self, message: Message)
+    fn update(&mut self, message: messages::Message)
     {
         match message
         {
@@ -40,33 +35,48 @@ impl Application {
             Message::ClassChanged(class) => {self.character.class = class; }
             Message::SubclassChanged(sub_class) => {self.character.subclass = sub_class;}
             Message::SpeciesChanged(species) => {self.character.species = species;}
-            Message::SaveToFile => {self.character.save();}
+            Message::SaveToFile => {self.open_save_dialog();}
+            Message::LoadFromFile => {self.open_load_dialog();}
         }
     }
-    fn view(&'_  self) -> Column<'_, Message>{
-        column![
-            row![
-                text("name: ").size(30),
 
-                text_input("",&self.character.name).on_input(Message::NameChanged)
-                ].align_y(Center), 
+    fn open_save_dialog(& self) {
 
-            row![
-                text("Class: ").size(30), 
-                text_input("",&self.character.class).on_input(Message::ClassChanged)
-                ].align_y(Center), 
+        match rfd::FileDialog::new()
+        .set_file_name("character.json")
+        .set_directory("~/Documents").save_file(){
+            Some(path) => 
+            {
+                match  self.character.save(&path){
+                    Ok(_) => {}
+                    Err(err) => {print!("{}",err);}
+                }
+            }
+            None => 
+            {
 
-            row![
-                text("SubClass: ").size(30), 
-                text_input("",&self.character.subclass).on_input(Message::SubclassChanged)
-                ].align_y(Center), 
-            row![
-                text("Species: ").size(30), 
-                text_input("",&self.character.species).on_input(Message::SpeciesChanged)
-                ].align_y(Center), 
+            }
+        }
+    }
 
-            button("save").on_press(Message::SaveToFile)
-        ].align_x(Left)
+    fn open_load_dialog(&mut self)
+    {
+        match rfd::FileDialog::new()
+        .set_file_name("character.json")
+        .set_directory("~/Documents").pick_file(){
+            Some(path) => 
+            {
+                self.character = Character::load(&path);
+            }
+            None => {}
+    }
+    }
+
+    fn view(&'_  self) -> Element<'_, messages::Message>{
+       row![
+       container( gui::namepanel::view(&self.character)).width(300)
+       ].height(300).into()
+
     }
 }
 
