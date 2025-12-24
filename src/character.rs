@@ -1,11 +1,15 @@
 use serde::{Deserialize, Serialize};
 use std::{fs::File, io::{self, BufReader, BufWriter, Write}, path};
+use crate::level;
+
     #[derive(Default, Debug, Serialize, Deserialize)]
     pub struct Character {
         pub name: String,
         pub class: String,
         pub subclass: String, 
         pub species: String,
+        
+        pub level: level::Level
    
     }
 

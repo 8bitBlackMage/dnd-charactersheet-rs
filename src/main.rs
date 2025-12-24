@@ -1,4 +1,4 @@
-use iced::Element;
+use iced::{Element, Length};
 use iced::widget::{column, container, row};
 
 mod statblocks;
@@ -23,8 +23,8 @@ impl Application {
         character: Character{   name: "Tav".to_string(), 
                                 class:"Warrior".to_string(), 
                                 subclass:"".to_string(), 
-                                species: "Half Elf".to_string()
-                                
+                                species: "Half Elf".to_string(),
+                                level: level::Level::new(1,false),
                             }
     } }
     fn update(&mut self, message: messages::Message)
@@ -37,6 +37,9 @@ impl Application {
             Message::SpeciesChanged(species) => {self.character.species = species;}
             Message::SaveToFile => {self.open_save_dialog();}
             Message::LoadFromFile => {self.open_load_dialog();}
+            Message::levelChanged(_) => todo!(),
+            Message::experienceAdd(exp) => {self.character.level.add_experience(exp);} ,
+            Message::experienceRemoved(_) => todo!(),
         }
     }
 
@@ -76,7 +79,8 @@ impl Application {
         column![
         gui::topbar::view(),
        row![
-       container( gui::namepanel::view(&self.character)).width(300)
+        container(gui::namepanel::view(&self.character)).width(Length::FillPortion(1)),
+        container(gui::levelpanel::view(&self.character.level)).width(Length::FillPortion(1))
        ].height(300)
         ].into()
 

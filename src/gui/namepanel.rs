@@ -7,10 +7,10 @@ use iced_aw::widget::{LabeledFrame, };
 
 
 pub fn view(character: &'_  character::Character) -> Element<'_, Message> {
-        LabeledFrame::new("Character info",
+        LabeledFrame::new("Character Info",
         column![
             row![
-                text("name: ")
+                text("Name: ")
                     .width(iced::Length::FillPortion(2)),
 
                 text_input("",&character.name)
@@ -28,7 +28,7 @@ pub fn view(character: &'_  character::Character) -> Element<'_, Message> {
                 ].align_y(Center), 
 
             row![
-                text("SubClass: ")
+                text("Sub Class: ")
                     .width(iced::Length::FillPortion(2)), 
 
                 text_input("",&character.subclass)
