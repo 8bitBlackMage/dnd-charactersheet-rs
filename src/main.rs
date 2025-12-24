@@ -1,5 +1,5 @@
-use iced::{
-        Alignment::Center, Element, Length, alignment::Horizontal::Left, widget::{button, column, container, row, text, text_input}};
+use iced::Element;
+use iced::widget::{column, container, row};
 
 mod statblocks;
 mod character;
@@ -73,9 +73,12 @@ impl Application {
     }
 
     fn view(&'_  self) -> Element<'_, messages::Message>{
+        column![
+        gui::topbar::view(),
        row![
        container( gui::namepanel::view(&self.character)).width(300)
-       ].height(300).into()
+       ].height(300)
+        ].into()
 
     }
 }

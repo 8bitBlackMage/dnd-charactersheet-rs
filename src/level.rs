@@ -1,6 +1,6 @@
 
 
-const LevelUpAmmounts : [i32;20] = [
+const LEVEL_UP_AMMOUNTS : [i32;20] = [
      0,
      300,
      900,
@@ -25,7 +25,7 @@ const LevelUpAmmounts : [i32;20] = [
 
 fn calculate_current_level(current_experience: i32) -> i32 
 {
-    LevelUpAmmounts.partition_point(|x| x < &current_experience).max(1).try_into().unwrap()
+    LEVEL_UP_AMMOUNTS.partition_point(|x| x < &current_experience).max(1).try_into().unwrap()
 }
 
 
