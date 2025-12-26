@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::{fs::File, io::{self, BufReader, BufWriter, Write}, path};
-use crate::level;
+use crate::{level, statblocks::StatBlock};
 
     #[derive(Default, Debug, Serialize, Deserialize)]
     pub struct Character {
@@ -9,8 +9,11 @@ use crate::level;
         pub subclass: String, 
         pub species: String,
         
-        pub level: level::Level
+        pub level: level::Level,
    
+
+        pub strength : StatBlock,
+        pub intellegence : StatBlock
     }
 
     impl Character {

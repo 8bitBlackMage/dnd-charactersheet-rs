@@ -45,7 +45,7 @@ fn calculate_proficency_bonus(level: i32) -> i32
 
 
 #[derive(Default,Debug,Serialize,Deserialize)]
-pub(crate) struct Level {
+pub struct Level {
     pub level: i32,
     pub is_milestone: bool,
 
@@ -61,7 +61,13 @@ impl Level {
         Level { level:level, is_milestone: is_milestone, experience: 0, profiency_bonus: calculate_proficency_bonus(level) }
     }
 
-
+    pub fn level_from_str(&mut self, level: String){
+        if level.is_empty() {self.level = 0;}
+        match level.parse() {
+            Ok(level_as_i32) => self.level = level_as_i32,
+            Err(_) => return,
+        }
+    }
 
     pub fn add_experience(&mut self, ammount_to_add: i32) {
         if self.is_milestone {

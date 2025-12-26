@@ -1,3 +1,7 @@
+use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize};
+
 fn calculate_modifier(ability_score:i32) -> i32 {
     let unrounded: f32 = (ability_score as f32 - 10.0)  / 2.0;
     println!("{}", unrounded);
@@ -7,43 +11,54 @@ fn calculate_modifier(ability_score:i32) -> i32 {
 
 
 
-#[derive(Default)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Skill {
     pub value: i32,
     pub proficient: bool,
     pub expert: bool
 }
 impl Skill {
+    pub fn new(initial_value: i32) -> Self {
+        Skill { value: initial_value, proficient: false, expert: false }
+    }
     fn get_modifier(&self) -> i32 {
         self.value + if self.proficient {self.value} else {0} + if self.expert {self.value} else {0}
     }
 } 
 
-
-trait StatBlock {
-    fn propogate_changes(&self);
-    fn get_modifier(&self) -> i32;
-    
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct StatBlock {
+    pub(crate) value: i32,
+    modifier: i32,
+    pub(crate) skills: HashMap<String, Skill>
 }
 
-#[derive(Default)]
-pub struct Strength{
-    value: i32,
-    athletics: Skill
-}
 
-#[derive(Default)]
-pub struct Intellgence{
-    value: i32,
-    arcana: Skill,
-    history: Skill,
-    investigation: Skill,
-    nature: Skill, 
-    religion: Skill,
 
-}
+impl StatBlock {
+    pub fn new_strength_block(initial_value: i32) -> Self {
+        StatBlock { 
+            value: initial_value, 
+            modifier: calculate_modifier(initial_value), 
+            skills: HashMap::from([
+                ("Athletics".to_string(), Skill::new(initial_value))
+            ])
+        }
+    }
+    pub fn new_intellegence_block(initial_value: i32) -> Self {
+        StatBlock { 
+            value: initial_value, 
+            modifier: calculate_modifier(initial_value), 
+            skills: HashMap::from([
+                ("Arcana".to_string(), Skill::new(initial_value)),
+                ("History".to_string(), Skill::new(initial_value)),
+                ("Investigation".to_string(), Skill::new(initial_value)),
+                ("Nature".to_string(), Skill::new(initial_value)),
+                ("Relgion".to_string(), Skill::new(initial_value)),
+            ])
+        }
+    }
 
-impl StatBlock for Strength{
     fn propogate_changes(&self) {
         
     }
@@ -51,8 +66,17 @@ impl StatBlock for Strength{
     fn get_modifier(&self) -> i32 {
         calculate_modifier(self.value)
     }
+    
+    pub fn get_modifier_as_string(&self) -> String {
+        let modifer = self.get_modifier();
+        if modifer > 0 {
+            return "+{}".replace("{}", &modifer.to_string());
+        }
+        else {
+            return modifer.to_string();
+        }
+    }
 }
-
 
 #[cfg(test)] 
 mod tests {

@@ -43,6 +43,6 @@ pub fn view(character: &'_  character::Character) -> Element<'_, Message> {
                     .width(iced::Length::FillPortion(3))
                     .on_input(Message::SpeciesChanged)
                 ].align_y(Center), 
-        ].padding(5).width(300)).into()
+        ].padding(5).width(300).spacing(10)).into()
 
 }

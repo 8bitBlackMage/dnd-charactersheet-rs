@@ -1,14 +1,19 @@
+use crate::statblocks::Skill;
+
 
 #[derive(Clone)]
-pub enum Message{
+pub enum Message {
     NameChanged(String),
     ClassChanged(String),
     SubclassChanged(String),
     SpeciesChanged(String),
 
-    levelChanged(String),
-    experienceAdd(i32),
-    experienceRemoved(i32),
+    LevelChanged(String),
+    ExperienceAdd(i32),
+    ExperienceRemoved(i32),
+
+    SkillProficencyChanged(bool),
+    SkillExpertieseChanged(bool),
 
     SaveToFile,
     LoadFromFile,
