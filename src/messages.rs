@@ -1,4 +1,5 @@
-use crate::statblocks::Skill;
+use crate::charactersheet::stattypes::StatTypes;
+
 
 
 #[derive(Clone)]
@@ -12,8 +13,8 @@ pub enum Message {
     ExperienceAdd(i32),
     ExperienceRemoved(i32),
 
-    SkillProficencyChanged(bool),
-    SkillExpertieseChanged(bool),
+    SkillProficencyChanged(StatTypes),
+    SkillExpertieseChanged(StatTypes),
 
     SaveToFile,
     LoadFromFile,

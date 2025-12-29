@@ -1,18 +1,17 @@
 use iced::{Element, Length};
 use iced::widget::{column, container, row};
 
-mod statblocks;
-mod character;
-mod level;
+mod charactersheet;
 mod messages;
 
 mod gui;
 
 
 
-use crate::character::Character;
+use crate::charactersheet::character::Character;
+use crate::charactersheet::level;
 use crate::messages::Message;
-use crate::statblocks::StatBlock;
+use crate::charactersheet::statblocks::StatBlock;
 #[derive(Default)]
 struct Application {
     character: Character
@@ -22,12 +21,16 @@ impl Application {
 
     fn new() -> Self { 
         Self{ character: Character{   name: "Tav".to_string(), 
-                                class:"Warrior".to_string(), 
+                                class:"Fighter".to_string(), 
                                 subclass:"".to_string(), 
                                 species: "Half Elf".to_string(),
                                 level: level::Level::new(1,false),
-                                strength : StatBlock::new_strength_block(0),
-                                intellegence : StatBlock::new_intellegence_block(0)
+                                strength : StatBlock::new_strength_block(15),
+                                dexterity: StatBlock::new_dexterity_block(13),
+                                constition: StatBlock::new_constitution_block(14),
+                                intellegence : StatBlock::new_intellegence_block(10),
+                                wisdom: StatBlock::new_wisdom_block(12),
+                                charisma: StatBlock::new_charisma_block(8),
     } 
     }
 }
@@ -44,8 +47,10 @@ impl Application {
             Message::LevelChanged(level) => self.character.level.level_from_str(level),
             Message::ExperienceAdd(exp) => {self.character.level.add_experience(exp);} ,
             Message::ExperienceRemoved(_) => todo!(),
-            Message::SkillProficencyChanged(_) => todo!(),
-            Message::SkillExpertieseChanged(_) => todo!(),
+            Message::SkillProficencyChanged(stat_type) => {
+                let mut skill = self.character.get_skill(stat_type);
+            }
+            Message::SkillExpertieseChanged(_) => {},
         }
     }
 
@@ -89,8 +94,14 @@ impl Application {
         container(gui::levelpanel::view(&self.character.level)).width(Length::FillPortion(1))
        ].height(300),
        row![
-        container(gui::stats::statpanel::view(&self.character.strength)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view(&self.character.intellegence)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Strength".to_string(), &self.character.strength)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Dexterity".to_string(), &self.character.dexterity)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Constitution".to_string(), &self.character.constition)).width(Length::FillPortion(1)),
+       ],
+       row![
+        container(gui::stats::statpanel::view("Intellegence".to_string(), &self.character.intellegence)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Wisdom".to_string(), &self.character.wisdom)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Charisma".to_string() ,&self.character.charisma)).width(Length::FillPortion(1)),
        ]
         ].into()
 

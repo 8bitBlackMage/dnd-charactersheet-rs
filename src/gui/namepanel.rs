@@ -1,9 +1,9 @@
-use crate::character;
+use crate::charactersheet::character;
 use crate::messages::Message;
 use iced::Element;
 use iced::widget::{column, row, text, text_input};
 use iced::Center;
-use iced_aw::widget::{LabeledFrame, };
+use iced_aw::widget::{LabeledFrame};
 
 
 pub fn view(character: &'_  character::Character) -> Element<'_, Message> {

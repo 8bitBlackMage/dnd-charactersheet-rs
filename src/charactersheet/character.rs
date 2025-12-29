@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::{fs::File, io::{self, BufReader, BufWriter, Write}, path};
-use crate::{level, statblocks::StatBlock};
+use crate::{charactersheet::{statblocks::{Skill, StatBlock}, stattypes}, level};
 
     #[derive(Default, Debug, Serialize, Deserialize)]
     pub struct Character {
@@ -13,7 +13,12 @@ use crate::{level, statblocks::StatBlock};
    
 
         pub strength : StatBlock,
-        pub intellegence : StatBlock
+        pub dexterity: StatBlock,
+        pub constition: StatBlock,
+        pub intellegence : StatBlock,
+        pub wisdom: StatBlock,
+        pub charisma: StatBlock,
+    
     }
 
     impl Character {
@@ -40,4 +45,23 @@ use crate::{level, statblocks::StatBlock};
                 Err(_) => {return Self::default() },
             }
         }
+
+        pub fn get_statblock(&self, stat_type:stattypes::StatTypes) -> & StatBlock
+        {
+             match stat_type{
+                stattypes::StatTypes::Strength(_) => &self.strength,
+                stattypes::StatTypes::Dexterity(_) => &self.dexterity,
+                stattypes::StatTypes::Constitution(_) => &self.constition,
+                stattypes::StatTypes::Intellegence(_) => &self.intellegence,
+                stattypes::StatTypes::Wisdom(_) => &self.wisdom,
+                stattypes::StatTypes::Charisma(_) =>  &self.charisma,
+            }
+        }
+
+        pub fn get_skill(&self,stat_type:stattypes::StatTypes) -> & Skill {
+            let stat_block = self.get_statblock(stat_type);
+            let skill_id:usize = stat_type.into();
+            & &stat_block.skills[skill_id].1
+        }
+
     }

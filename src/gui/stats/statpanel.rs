@@ -3,13 +3,14 @@ use iced::{Element};
 use iced::widget::{column, row, rule, text};
 use iced_aw::widget::LabeledFrame;
 
-use crate::{statblocks, messages::Message};
+use crate::charactersheet::statblocks;
+use crate::messages::Message;
 
 use crate::gui::stats::skilldisplay;
 
-pub fn view(stat_block: &'_  statblocks::StatBlock) -> Element<'_, Message> {
+pub fn view(name: String, stat_block: &'_  statblocks::StatBlock) -> Element<'_, Message> {
 
-    LabeledFrame::new("Strength",
+    LabeledFrame::new(text(name),
     column![
         row![
             column![
@@ -24,10 +25,10 @@ pub fn view(stat_block: &'_  statblocks::StatBlock) -> Element<'_, Message> {
         rule::horizontal(2),
         column( stat_block.skills.iter().enumerate().map(
             |(_, skill)| {
-                skilldisplay::view(skill.0,skill.1)
+                skilldisplay::view(&skill.0,&skill.1)
             }
         ))
 
         
-    ].width(200).spacing(10)).into()
+    ].width(250).spacing(10)).into()
 }

@@ -1,55 +1,65 @@
-use std::collections::HashMap;
+
 
 use serde::{Deserialize, Serialize};
 
-fn calculate_modifier(ability_score:i32) -> i32 {
+fn calculate_modifier(ability_score:i8) -> i8 {
     let unrounded: f32 = (ability_score as f32 - 10.0)  / 2.0;
-    println!("{}", unrounded);
-    unrounded.floor() as i32
+    unrounded.floor() as i8
+}
+
+fn get_modifier_as_string(modifier:i8) -> String {
+        if modifier >= 0 {
+            return "+{}".replace("{}", &modifier.to_string());
+        }
+        else {
+            return modifier.to_string();
+        }
 }
 
 
 
-
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug,Clone , Default, Serialize, Deserialize)]
 pub struct Skill {
-    pub value: i32,
+    pub value: i8,
     pub proficient: bool,
     pub expert: bool
 }
 impl Skill {
-    pub fn new(initial_value: i32) -> Self {
+    pub fn new(initial_value: i8) -> Self {
         Skill { value: initial_value, proficient: false, expert: false }
     }
-    fn get_modifier(&self) -> i32 {
-        self.value + if self.proficient {self.value} else {0} + if self.expert {self.value} else {0}
+    pub fn get_modifier(&self) -> i8 {
+        calculate_modifier(self.value)
+    }
+    pub fn get_modifier_as_string(&self)-> String {
+        get_modifier_as_string(self.get_modifier())
     }
 } 
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Default,Clone, Serialize, Deserialize)]
 pub struct StatBlock {
-    pub(crate) value: i32,
-    modifier: i32,
-    pub(crate) skills: HashMap<String, Skill>
+    pub(crate) value: i8,
+    modifier: i8,
+    pub(crate) skills: Vec<(String, Skill)>
 }
 
 
 
 impl StatBlock {
-    pub fn new_strength_block(initial_value: i32) -> Self {
+    pub fn new_strength_block(initial_value: i8) -> Self {
         StatBlock { 
             value: initial_value, 
             modifier: calculate_modifier(initial_value), 
-            skills: HashMap::from([
+            skills: Vec::from([
                 ("Athletics".to_string(), Skill::new(initial_value))
             ])
         }
     }
-    pub fn new_intellegence_block(initial_value: i32) -> Self {
+    pub fn new_intellegence_block(initial_value: i8) -> Self {
         StatBlock { 
             value: initial_value, 
             modifier: calculate_modifier(initial_value), 
-            skills: HashMap::from([
+            skills: Vec::from([
                 ("Arcana".to_string(), Skill::new(initial_value)),
                 ("History".to_string(), Skill::new(initial_value)),
                 ("Investigation".to_string(), Skill::new(initial_value)),
@@ -59,22 +69,53 @@ impl StatBlock {
         }
     }
 
-    fn propogate_changes(&self) {
-        
+    pub fn new_constitution_block(initial_value: i8) -> Self {
+        StatBlock { value: initial_value, modifier: calculate_modifier(initial_value), skills: Vec::new() }
     }
 
-    fn get_modifier(&self) -> i32 {
-        calculate_modifier(self.value)
+    pub fn new_dexterity_block(initial_value: i8) -> Self {
+        StatBlock { value:initial_value, 
+                    modifier: calculate_modifier(initial_value), 
+                    skills: Vec::from([
+                        ("Acrobatics".to_string(), Skill::new(initial_value)),
+                        ("Slight of Hand".to_string(), Skill::new(initial_value)),
+                        ("Stealth".to_string(), Skill::new(initial_value)),
+                    ])
+                }
     }
+
+    pub fn new_wisdom_block(initial_value: i8) -> Self {
+                StatBlock { value:initial_value, 
+                    modifier: calculate_modifier(initial_value), 
+                    skills: Vec::from([
+                        ("Animal Handling".to_string(), Skill::new(initial_value)),
+                        ("Insight".to_string(), Skill::new(initial_value)),
+                        ("Medicine".to_string(), Skill::new(initial_value)),
+                        ("Perception".to_string(), Skill::new(initial_value)),
+                        ("Survival".to_string(), Skill::new(initial_value)),
+                    ])
+                }
+    }
+
+    pub fn new_charisma_block(initial_value: i8) -> Self {
+                StatBlock { value:initial_value, 
+                    modifier: calculate_modifier(initial_value), 
+                    skills: Vec::from([
+                        ("Deception".to_string(), Skill::new(initial_value)),
+                        ("Intimidation".to_string(), Skill::new(initial_value)),
+                        ("Performance".to_string(), Skill::new(initial_value)),
+                        ("Persuasion".to_string(), Skill::new(initial_value)),
+                    ])
+                }
+    }
+
+    // fn propogate_changes(&self) {
+        
+    // }
+
     
     pub fn get_modifier_as_string(&self) -> String {
-        let modifer = self.get_modifier();
-        if modifer > 0 {
-            return "+{}".replace("{}", &modifer.to_string());
-        }
-        else {
-            return modifer.to_string();
-        }
+            get_modifier_as_string(self.modifier)
     }
 }
 
