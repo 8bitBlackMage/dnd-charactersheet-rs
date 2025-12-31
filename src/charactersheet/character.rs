@@ -101,4 +101,20 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
             }
         }
 
+        pub fn get_skill(&self ,skill_id: SkillTypes) -> Skill {
+            self.skills[&skill_id]
+        }
+        pub fn set_skill(&mut self, skil_id: SkillTypes, skill: Skill){
+            self.skills.insert(skil_id,skill);
+        }
+
+        //#TODO come back and handle skill propogation on change.
+        pub fn get_ability(&self, ability_id: AbilityScoreTypes) -> Ability {
+            self.abilities[&ability_id]
+        }
+        
+        pub fn set_ability(&mut self, ability_id: AbilityScoreTypes, ability: Ability) {
+            self.abilities.insert(ability_id, ability);
+        }
+
     }

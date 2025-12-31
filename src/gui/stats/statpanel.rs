@@ -1,16 +1,17 @@
+
 use iced::Length::FillPortion;
 use iced::{Element};
 use iced::widget::{column, row, rule, text};
 use iced_aw::widget::LabeledFrame;
 
-use crate::charactersheet::abilities;
+use crate::charactersheet::abilities::AbilityScoreTypes;
+use crate::charactersheet::character::Character;
 use crate::messages::Message;
 
-use crate::gui::stats::skilldisplay;
 
-pub fn view(name: String, ability: &'_  abilities::Ability) -> Element<'_, Message> {
-
-    LabeledFrame::new(text(name),
+pub fn view(name: String, ability_id: AbilityScoreTypes, character: & Character, ) -> Element<'static, Message> {
+    let ability = character.get_ability(ability_id);
+     LabeledFrame::new(text(name),
     column![
         row![
             column![
@@ -23,7 +24,7 @@ pub fn view(name: String, ability: &'_  abilities::Ability) -> Element<'_, Messa
             ].width(FillPortion(1)),
         ],
         rule::horizontal(2),
-        // column( ability.skills.iter().enumerate().map(
+        // column(skills.iter().enumerate().map(
         //     |(_, skill)| {
         //         skilldisplay::view(&skill.0,&skill.1)
         //     }

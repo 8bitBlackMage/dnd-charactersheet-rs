@@ -9,6 +9,8 @@ mod gui;
 
 
 use crate::charactersheet::character::Character;
+use crate::charactersheet::abilities::AbilityScoreTypes;
+
 use crate::charactersheet::level;
 use crate::messages::Message;
 #[derive(Default)]
@@ -81,14 +83,22 @@ impl Application {
         container(gui::levelpanel::view(&self.character.level)).width(Length::FillPortion(1))
        ].height(300),
        row![
-        container(gui::stats::statpanel::view("Strength".to_string(), &self.character.strength)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Dexterity".to_string(), &self.character.dexterity)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Constitution".to_string(), &self.character.constition)).width(Length::FillPortion(1)),
-       ],
+        container(gui::stats::statpanel::view("Strength".to_string(), AbilityScoreTypes::Strength, &self.character))
+            .width(Length::FillPortion(1)),
+
+        container(gui::stats::statpanel::view("Dexterity".to_string(),AbilityScoreTypes::Dexterity, &self.character))
+            .width(Length::FillPortion(1)),
+
+        container(gui::stats::statpanel::view("Constitution".to_string(),AbilityScoreTypes::Constitution, &self.character))
+            .width(Length::FillPortion(1)),
+        ],
        row![
-        container(gui::stats::statpanel::view("Intellegence".to_string(), &self.character.intellegence)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Wisdom".to_string(), &self.character.wisdom)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Charisma".to_string() ,&self.character.charisma)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Intellegence".to_string(), AbilityScoreTypes::Intellegence, &self.character))
+            .width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Wisdom".to_string(),AbilityScoreTypes::Wisdom, &self.character ))
+            .width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view("Charisma".to_string(), AbilityScoreTypes::Charisma, &self.character))
+            .width(Length::FillPortion(1)),
        ]
         ].into()
 
