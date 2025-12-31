@@ -11,7 +11,6 @@ mod gui;
 use crate::charactersheet::character::Character;
 use crate::charactersheet::level;
 use crate::messages::Message;
-use crate::charactersheet::statblocks::StatBlock;
 #[derive(Default)]
 struct Application {
     character: Character
@@ -20,19 +19,9 @@ struct Application {
 impl Application {
 
     fn new() -> Self { 
-        Self{ character: Character{   name: "Tav".to_string(), 
-                                class:"Fighter".to_string(), 
-                                subclass:"".to_string(), 
-                                species: "Half Elf".to_string(),
-                                level: level::Level::new(1,false),
-                                strength : StatBlock::new_strength_block(15),
-                                dexterity: StatBlock::new_dexterity_block(13),
-                                constition: StatBlock::new_constitution_block(14),
-                                intellegence : StatBlock::new_intellegence_block(10),
-                                wisdom: StatBlock::new_wisdom_block(12),
-                                charisma: StatBlock::new_charisma_block(8),
+        Self{ character: Character::default(),
     } 
-    }
+    
 }
     fn update(&mut self, message: messages::Message)
     {
@@ -47,9 +36,7 @@ impl Application {
             Message::LevelChanged(level) => self.character.level.level_from_str(level),
             Message::ExperienceAdd(exp) => {self.character.level.add_experience(exp);} ,
             Message::ExperienceRemoved(_) => todo!(),
-            Message::SkillProficencyChanged(stat_type) => {
-                let mut skill = self.character.get_skill(stat_type);
-            }
+            Message::SkillProficencyChanged(stat_type) => {},
             Message::SkillExpertieseChanged(_) => {},
         }
     }

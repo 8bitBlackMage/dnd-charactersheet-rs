@@ -1,8 +1,11 @@
 use serde::{Deserialize, Serialize};
-use std::{fs::File, io::{self, BufReader, BufWriter, Write}, path};
-use crate::{charactersheet::{statblocks::{Skill, StatBlock}, stattypes}, level};
+use std::collections::HashMap;
 
-    #[derive(Default, Debug, Serialize, Deserialize)]
+use std::{fs::File, io::{self, BufReader, BufWriter, Write}, path};
+use crate::charactersheet::abilities::*;
+use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
+
+    #[derive(Debug, Serialize, Deserialize)]
     pub struct Character {
         pub name: String,
         pub class: String,
@@ -12,14 +15,66 @@ use crate::{charactersheet::{statblocks::{Skill, StatBlock}, stattypes}, level};
         pub level: level::Level,
    
 
-        pub strength : StatBlock,
-        pub dexterity: StatBlock,
-        pub constition: StatBlock,
-        pub intellegence : StatBlock,
-        pub wisdom: StatBlock,
-        pub charisma: StatBlock,
-    
+        pub strength : Ability,
+        pub dexterity: Ability,
+        pub constition: Ability,
+        pub intellegence : Ability,
+        pub wisdom: Ability,
+        pub charisma: Ability,
+        
+        abilities: HashMap<AbilityScoreTypes,Ability>,
+
+        skills: HashMap<SkillTypes, Skill>
+        
+
+
     }
+
+    impl Default for Character {
+        fn default() -> Self {
+        Self { 
+            name: "Tav".to_string(), 
+            class:"Fighter".to_string(), 
+            subclass:"".to_string(), 
+            species: "Half Elf".to_string(),
+            level: level::Level::new(1,false),
+            strength: Default::default(), 
+            dexterity: Default::default(), 
+            constition: Default::default(), 
+            intellegence: Default::default(), 
+            wisdom: Default::default(), 
+            charisma: Default::default(),
+            abilities: HashMap::from([
+                (AbilityScoreTypes::Strength,Ability::new(15)),
+                (AbilityScoreTypes::Dexterity,Ability::new(13)),
+                (AbilityScoreTypes::Constitution,Ability::new(14)),
+                (AbilityScoreTypes::Intellegence,Ability::new(10)),
+                (AbilityScoreTypes::Wisdom,Ability::new(12)),
+                (AbilityScoreTypes::Charisma,Ability::new(8))
+            ]),
+            skills: HashMap::from([
+                    (SkillTypes::Athletics,Skill::new(0, AbilityScoreTypes::Strength)),
+                    (SkillTypes::Acrobatics, Skill::new(0,AbilityScoreTypes::Dexterity)),
+                    (SkillTypes::SlightOfHand, Skill::new(0,AbilityScoreTypes::Dexterity)),
+                    (SkillTypes::Stealth, Skill::new(0,AbilityScoreTypes::Dexterity)),
+                    (SkillTypes::Arcana, Skill::new(0, AbilityScoreTypes::Intellegence)),
+                    (SkillTypes::History, Skill::new(0, AbilityScoreTypes::Intellegence)),
+                    (SkillTypes::Investigation, Skill::new(0, AbilityScoreTypes::Intellegence)),
+                    (SkillTypes::Nature, Skill::new(0, AbilityScoreTypes::Intellegence)),
+                    (SkillTypes::Relgion, Skill::new(0, AbilityScoreTypes::Intellegence)),
+                    (SkillTypes::AnimalHandling, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Insight, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Medicine, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Perception, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Survival, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Intimidation, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Performance, Skill::new(0, AbilityScoreTypes::Charisma)),
+                    (SkillTypes::Persuasion, Skill::new(0, AbilityScoreTypes::Charisma)),
+            ]) 
+        }
+    }
+    }
+
 
     impl Character {
 
@@ -44,24 +99,6 @@ use crate::{charactersheet::{statblocks::{Skill, StatBlock}, stattypes}, level};
                 }
                 Err(_) => {return Self::default() },
             }
-        }
-
-        pub fn get_statblock(&self, stat_type:stattypes::StatTypes) -> & StatBlock
-        {
-             match stat_type{
-                stattypes::StatTypes::Strength(_) => &self.strength,
-                stattypes::StatTypes::Dexterity(_) => &self.dexterity,
-                stattypes::StatTypes::Constitution(_) => &self.constition,
-                stattypes::StatTypes::Intellegence(_) => &self.intellegence,
-                stattypes::StatTypes::Wisdom(_) => &self.wisdom,
-                stattypes::StatTypes::Charisma(_) =>  &self.charisma,
-            }
-        }
-
-        pub fn get_skill(&self,stat_type:stattypes::StatTypes) -> & Skill {
-            let stat_block = self.get_statblock(stat_type);
-            let skill_id:usize = stat_type.into();
-            & &stat_block.skills[skill_id].1
         }
 
     }
