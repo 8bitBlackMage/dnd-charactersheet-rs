@@ -30,34 +30,34 @@ fn calculate_current_level(current_experience: i32) -> i32
     LEVEL_UP_AMMOUNTS.partition_point(|x| x < &current_experience).max(1).try_into().unwrap()
 }
 
-fn calculate_proficency_bonus(level: i32) -> i32
+fn calculate_proficency_bonus(level: i8) -> i8
 {
     match level {
 
-        1_i32..=4_i32 => 2,
-        5_i32..=8_i32 => 3,
-        9_i32..=12_i32 => 4,
-        13_i32..=16_i32 => 5,
-        17_i32..=20_i32 => 6,
+        1_i8..=4_i8 => 2,
+        5_i8..=8_i8 => 3,
+        9_i8..=12_i8 => 4,
+        13_i8..=16_i8 => 5,
+        17_i8..=20_i8 => 6,
         _=> 6
     }
 }
 
 
-#[derive(Default,Debug,Serialize,Deserialize)]
+#[derive(Clone, Copy, Default,Debug,Serialize,Deserialize)]
 pub struct Level {
-    pub level: i32,
+    pub level: i8,
     pub is_milestone: bool,
 
-    pub experience: i32,
+    pub experience: i8,
     
-    pub profiency_bonus: i32,
+    pub profiency_bonus: i8,
 }
 
 
 impl Level {
 
-    pub fn new(level: i32, is_milestone: bool) -> Self {
+    pub fn new(level: i8, is_milestone: bool) -> Self {
         Level { level:level, is_milestone: is_milestone, experience: 0, profiency_bonus: calculate_proficency_bonus(level) }
     }
 
@@ -69,7 +69,7 @@ impl Level {
         }
     }
 
-    pub fn add_experience(&mut self, ammount_to_add: i32) {
+    pub fn add_experience(&mut self, ammount_to_add: i8) {
         if self.is_milestone {
             return
         }

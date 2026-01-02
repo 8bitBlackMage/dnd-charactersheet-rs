@@ -2,6 +2,8 @@
 
 use serde::{Deserialize, Serialize};
 
+use crate::charactersheet::level::{self, Level};
+
 
 #[derive(Debug,PartialEq, Eq,Clone,Copy, Serialize,Deserialize,Hash)]
 pub enum AbilityScoreTypes {
@@ -88,16 +90,25 @@ fn get_modifier_as_string(modifier:i8) -> String {
 #[derive(Debug,Clone,Copy,Serialize, Deserialize)]
 pub struct Skill {
     pub ability: AbilityScoreTypes,
-    pub value: i8,
+    value: i8,
     pub proficient: bool,
     pub expert: bool
 }
 impl Skill {
-    pub fn new(initial_value: i8, ability_type: AbilityScoreTypes ) -> Self {
-        Skill { value: initial_value, proficient: false, expert: false, ability: ability_type }
+    pub fn new(ability_score: i8, ability_type: AbilityScoreTypes, level: &Level) -> Self {
+        let  mut skill = Skill { value: 0, proficient: false, expert: false, ability: ability_type };
+        skill.set_modifier(ability_score, level);
+        return skill;
     }
+
+    pub fn set_modifier(&mut self, ability_score:i8, level: &Level){
+        let bonus:i8 = if self.proficient {level.profiency_bonus} else {0} * if self.expert{2} else {1};
+        self.value = calculate_modifier(ability_score) + bonus;
+    }
+
+
     pub fn get_modifier(&self) -> i8 {
-        calculate_modifier(self.value) + if self.proficient{2} else {0} 
+        self.value
     }
     pub fn get_modifier_as_string(&self)-> String {
         get_modifier_as_string(self.get_modifier())
@@ -126,8 +137,21 @@ mod tests {
 
     #[test]
     fn test_skill_proficency_calculation() {
-        let unproficient_skill : Skill = Skill { value: 16, proficient: false, expert: false, ability: AbilityScoreTypes::Charisma };
+        let unproficient_skill : Skill = Skill { value: 3, proficient: false, expert: false, ability: AbilityScoreTypes::Charisma };
         assert_eq!(unproficient_skill.get_modifier(), 3);
+
+        let level = Level::new(1, true);
+        let mut proficient_skill = Skill{value: 3, proficient: true, expert: false, ability: AbilityScoreTypes::Charisma};
+        proficient_skill.set_modifier(16, &level);
+
+        assert_eq!(proficient_skill.get_modifier(), 3 + level.profiency_bonus);
+
+
+        let mut expert_skill = Skill{value: 3, proficient: true, expert: true, ability: AbilityScoreTypes::Charisma};
+        expert_skill.set_modifier(16, &level);
+
+        assert_eq!(expert_skill.get_modifier(), 3 + ( level.profiency_bonus * 2 ));
+
     }
     #[test]
     fn test_ability_score_calculation(){

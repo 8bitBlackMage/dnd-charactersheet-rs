@@ -23,7 +23,7 @@ impl Application {
     fn new() -> Self { 
         Self{ character: Character::default()} 
     }
-    
+
     fn update(&mut self, message: messages::Message)
     {
         match message
@@ -41,11 +41,16 @@ impl Application {
             {
                 let mut skill = self.character.get_skill(skill_id);
                 skill.proficient = !skill.proficient;
+                if skill.proficient == false {
+                    skill.expert = false
+                }
+                skill.set_modifier(self.character.get_ability(skill.ability).value, &self.character.level);
                 self.character.set_skill(skill_id, skill);
             },
             Message::SkillExpertieseChanged(skill_id) => {
                 let mut skill = self.character.get_skill(skill_id);
                 skill.expert = !skill.expert;
+                skill.set_modifier(self.character.get_ability(skill.ability).value, &self.character.level);
                 self.character.set_skill(skill_id, skill);
             },
         }

@@ -10,7 +10,7 @@ pub enum Message {
     SpeciesChanged(String),
 
     LevelChanged(String),
-    ExperienceAdd(i32),
+    ExperienceAdd(i8),
     ExperienceRemoved(i32),
 
     SkillProficencyChanged(SkillTypes),

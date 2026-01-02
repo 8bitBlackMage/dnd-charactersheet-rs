@@ -32,12 +32,13 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
 
     impl Default for Character {
         fn default() -> Self {
+        let level = level::Level::new(1,false);
         let mut  character = Character { 
             name: "Tav".to_string(), 
             class:"Fighter".to_string(), 
             subclass:"".to_string(), 
             species: "Half Elf".to_string(),
-            level: level::Level::new(1,false),
+            level: level,
             strength: Default::default(), 
             dexterity: Default::default(), 
             constition: Default::default(), 
@@ -53,27 +54,27 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
                 (AbilityScoreTypes::Charisma,Ability::new(8))
             ]),
             skills: HashMap::from([
-                    (SkillTypes::Athletics,Skill::new(0, AbilityScoreTypes::Strength)),
-                    (SkillTypes::Acrobatics, Skill::new(0,AbilityScoreTypes::Dexterity)),
-                    (SkillTypes::SleightOfHand, Skill::new(0,AbilityScoreTypes::Dexterity)),
-                    (SkillTypes::Stealth, Skill::new(0,AbilityScoreTypes::Dexterity)),
-                    (SkillTypes::Arcana, Skill::new(0, AbilityScoreTypes::Intellegence)),
-                    (SkillTypes::History, Skill::new(0, AbilityScoreTypes::Intellegence)),
-                    (SkillTypes::Investigation, Skill::new(0, AbilityScoreTypes::Intellegence)),
-                    (SkillTypes::Nature, Skill::new(0, AbilityScoreTypes::Intellegence)),
-                    (SkillTypes::Religion, Skill::new(0, AbilityScoreTypes::Intellegence)),
-                    (SkillTypes::AnimalHandling, Skill::new(0, AbilityScoreTypes::Wisdom)),
-                    (SkillTypes::Insight, Skill::new(0, AbilityScoreTypes::Wisdom)),
-                    (SkillTypes::Medicine, Skill::new(0, AbilityScoreTypes::Wisdom)),
-                    (SkillTypes::Perception, Skill::new(0, AbilityScoreTypes::Wisdom)),
-                    (SkillTypes::Survival, Skill::new(0, AbilityScoreTypes::Wisdom)),
-                    (SkillTypes::Intimidation, Skill::new(0, AbilityScoreTypes::Wisdom)),
-                    (SkillTypes::Deception, Skill::new(0, AbilityScoreTypes::Charisma)),
-                    (SkillTypes::Performance, Skill::new(0, AbilityScoreTypes::Charisma)),
-                    (SkillTypes::Persuasion, Skill::new(0, AbilityScoreTypes::Charisma)),
+                    (SkillTypes::Athletics,Skill::new(0, AbilityScoreTypes::Strength, &level)),
+                    (SkillTypes::Acrobatics, Skill::new(0,AbilityScoreTypes::Dexterity, &level)),
+                    (SkillTypes::SleightOfHand, Skill::new(0,AbilityScoreTypes::Dexterity, &level)),
+                    (SkillTypes::Stealth, Skill::new(0,AbilityScoreTypes::Dexterity, &level)),
+                    (SkillTypes::Arcana, Skill::new(0, AbilityScoreTypes::Intellegence, &level)),
+                    (SkillTypes::History, Skill::new(0, AbilityScoreTypes::Intellegence, &level)),
+                    (SkillTypes::Investigation, Skill::new(0, AbilityScoreTypes::Intellegence, &level)),
+                    (SkillTypes::Nature, Skill::new(0, AbilityScoreTypes::Intellegence, &level)),
+                    (SkillTypes::Religion, Skill::new(0, AbilityScoreTypes::Intellegence, &level)),
+                    (SkillTypes::AnimalHandling, Skill::new(0, AbilityScoreTypes::Wisdom, &level)),
+                    (SkillTypes::Insight, Skill::new(0, AbilityScoreTypes::Wisdom, &level)),
+                    (SkillTypes::Medicine, Skill::new(0, AbilityScoreTypes::Wisdom, &level)),
+                    (SkillTypes::Perception, Skill::new(0, AbilityScoreTypes::Wisdom, &level)),
+                    (SkillTypes::Survival, Skill::new(0, AbilityScoreTypes::Wisdom, &level)),
+                    (SkillTypes::Deception, Skill::new(0, AbilityScoreTypes::Charisma, &level)),
+                    (SkillTypes::Intimidation, Skill::new(0, AbilityScoreTypes::Charisma, &level)),
+                    (SkillTypes::Performance, Skill::new(0, AbilityScoreTypes::Charisma, &level)),
+                    (SkillTypes::Persuasion, Skill::new(0, AbilityScoreTypes::Charisma, &level)),
             ]) 
         };
-        character.propogate_skill_changes();
+        character.propagate_skill_changes();
         return character;
     }
     }
@@ -91,9 +92,9 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
             Ok(())
         }
 
-        pub fn propogate_skill_changes(&mut self){
+        pub fn propagate_skill_changes(&mut self){
             for (_,skill) in self.skills.iter_mut() {
-                skill.value = self.abilities[&skill.ability].value;
+                skill.set_modifier(self.abilities[&skill.ability].value, &self.level);
             }
         }
 
@@ -124,6 +125,7 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
         
         pub fn set_ability(&mut self, ability_id: AbilityScoreTypes, ability: Ability) {
             self.abilities.insert(ability_id, ability);
+            self.propagate_skill_changes();
         }
 
     }
