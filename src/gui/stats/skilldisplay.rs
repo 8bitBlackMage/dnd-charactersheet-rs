@@ -1,14 +1,15 @@
-use crate::{charactersheet::{statblocks, stattypes::{IntellegenceSkills, StatTypes}}, messages::Message};
+use crate::charactersheet::abilities;
+use crate::Message;
 
 use iced::{Element, Length::{self}, widget::{row, text,checkbox,space}};
 
 
-pub fn view<'a>(skill_name: &'a str , skill: &'a statblocks::Skill) -> Element<'a, Message> {
+pub fn view (skill_id: abilities::SkillTypes , skill: abilities::Skill) -> Element<'static, Message> {
     row![
-        text(skill_name).width(Length::FillPortion(3)), 
+        text(abilities::get_skill_name(skill_id)).width(Length::FillPortion(3)), 
         text(skill.get_modifier_as_string()).width(Length::FillPortion(1)),
-        checkbox(skill.proficient).width(Length::FillPortion(1)),
+        checkbox(skill.proficient).on_toggle(move |_| Message::SkillProficencyChanged(skill_id)).width(Length::FillPortion(1)),
         space::horizontal(),
-        checkbox(skill.expert).on_toggle(|_| Message::SkillExpertieseChanged(StatTypes::Intellegence(IntellegenceSkills::Arcana))).width(Length::FillPortion(1)),
+        checkbox(skill.expert).on_toggle_maybe(if skill.proficient{Some(move |_| Message::SkillExpertieseChanged(skill_id))} else {None} ).width(Length::FillPortion(1)),
         ].into()
 }

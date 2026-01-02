@@ -1,5 +1,3 @@
-pub mod statblocks;
-pub mod stattypes;
+pub mod abilities;
 pub mod level;
-
 pub mod character;

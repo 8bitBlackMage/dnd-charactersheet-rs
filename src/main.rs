@@ -9,9 +9,10 @@ mod gui;
 
 
 use crate::charactersheet::character::Character;
+use crate::charactersheet::abilities::{AbilityScoreTypes, SkillTypes};
+
 use crate::charactersheet::level;
 use crate::messages::Message;
-use crate::charactersheet::statblocks::StatBlock;
 #[derive(Default)]
 struct Application {
     character: Character
@@ -20,20 +21,9 @@ struct Application {
 impl Application {
 
     fn new() -> Self { 
-        Self{ character: Character{   name: "Tav".to_string(), 
-                                class:"Fighter".to_string(), 
-                                subclass:"".to_string(), 
-                                species: "Half Elf".to_string(),
-                                level: level::Level::new(1,false),
-                                strength : StatBlock::new_strength_block(15),
-                                dexterity: StatBlock::new_dexterity_block(13),
-                                constition: StatBlock::new_constitution_block(14),
-                                intellegence : StatBlock::new_intellegence_block(10),
-                                wisdom: StatBlock::new_wisdom_block(12),
-                                charisma: StatBlock::new_charisma_block(8),
-    } 
+        Self{ character: Character::default()} 
     }
-}
+
     fn update(&mut self, message: messages::Message)
     {
         match message
@@ -47,10 +37,22 @@ impl Application {
             Message::LevelChanged(level) => self.character.level.level_from_str(level),
             Message::ExperienceAdd(exp) => {self.character.level.add_experience(exp);} ,
             Message::ExperienceRemoved(_) => todo!(),
-            Message::SkillProficencyChanged(stat_type) => {
-                let mut skill = self.character.get_skill(stat_type);
-            }
-            Message::SkillExpertieseChanged(_) => {},
+            Message::SkillProficencyChanged(skill_id) => 
+            {
+                let mut skill = self.character.get_skill(skill_id);
+                skill.proficient = !skill.proficient;
+                if skill.proficient == false {
+                    skill.expert = false
+                }
+                skill.set_modifier(self.character.get_ability(skill.ability).value, &self.character.level);
+                self.character.set_skill(skill_id, skill);
+            },
+            Message::SkillExpertieseChanged(skill_id) => {
+                let mut skill = self.character.get_skill(skill_id);
+                skill.expert = !skill.expert;
+                skill.set_modifier(self.character.get_ability(skill.ability).value, &self.character.level);
+                self.character.set_skill(skill_id, skill);
+            },
         }
     }
 
@@ -87,6 +89,7 @@ impl Application {
     }
 
     fn view(&'_  self) -> Element<'_, messages::Message>{
+        use SkillTypes::*;
         column![
         gui::topbar::view(),
        row![
@@ -94,14 +97,22 @@ impl Application {
         container(gui::levelpanel::view(&self.character.level)).width(Length::FillPortion(1))
        ].height(300),
        row![
-        container(gui::stats::statpanel::view("Strength".to_string(), &self.character.strength)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Dexterity".to_string(), &self.character.dexterity)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Constitution".to_string(), &self.character.constition)).width(Length::FillPortion(1)),
-       ],
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Strength, Vec::from([Athletics])))
+            .width(Length::FillPortion(1)),
+
+        container(gui::stats::statpanel::view(&self.character,AbilityScoreTypes::Dexterity,Vec::from([Acrobatics, SleightOfHand, Stealth])))
+            .width(Length::FillPortion(1)),
+
+        container(gui::stats::statpanel::view(&self.character,AbilityScoreTypes::Constitution,Vec::from([])))
+            .width(Length::FillPortion(1)),
+        ],
        row![
-        container(gui::stats::statpanel::view("Intellegence".to_string(), &self.character.intellegence)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Wisdom".to_string(), &self.character.wisdom)).width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Charisma".to_string() ,&self.character.charisma)).width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Intellegence,Vec::from([Arcana,History,Investigation,Nature,Religion])))
+            .width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Wisdom, Vec::from([AnimalHandling,Insight,Medicine,Perception,Survival])))
+            .width(Length::FillPortion(1)),
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Charisma, Vec::from([Deception,Intimidation,Performance,Persuasion])))
+            .width(Length::FillPortion(1)),
        ]
         ].into()
 
