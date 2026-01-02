@@ -4,14 +4,15 @@ use iced::{Element};
 use iced::widget::{column, row, rule, text};
 use iced_aw::widget::LabeledFrame;
 
-use crate::charactersheet::abilities::AbilityScoreTypes;
+use crate::charactersheet::abilities::{self, AbilityScoreTypes, SkillTypes};
 use crate::charactersheet::character::Character;
+use crate::gui::stats::skilldisplay;
 use crate::messages::Message;
 
 
-pub fn view(name: String, ability_id: AbilityScoreTypes, character: & Character, ) -> Element<'static, Message> {
+pub fn view( character: & Character, ability_id: AbilityScoreTypes,skill_ids: Vec<SkillTypes>, ) -> Element<'static, Message> {
     let ability = character.get_ability(ability_id);
-     LabeledFrame::new(text(name),
+     LabeledFrame::new(text(abilities::get_ability_name(ability_id)),
     column![
         row![
             column![
@@ -24,11 +25,11 @@ pub fn view(name: String, ability_id: AbilityScoreTypes, character: & Character,
             ].width(FillPortion(1)),
         ],
         rule::horizontal(2),
-        // column(skills.iter().enumerate().map(
-        //     |(_, skill)| {
-        //         skilldisplay::view(&skill.0,&skill.1)
-        //     }
-        // ))
+        column(skill_ids.iter().enumerate().map(
+            |(_,skill_id)| {
+                skilldisplay::view(abilities::get_skill_name(*skill_id),character.get_skill(*skill_id))
+            }
+        ))
 
         
     ].width(250).spacing(10)).into()

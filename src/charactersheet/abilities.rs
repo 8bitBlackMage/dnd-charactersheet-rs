@@ -17,21 +17,55 @@ pub enum AbilityScoreTypes {
 pub enum SkillTypes {
     Athletics,
     Acrobatics,
-    SlightOfHand,
+    SleightOfHand,
     Stealth,
     Arcana,
     History,
     Investigation,
     Nature,
-    Relgion,
+    Religion,
     AnimalHandling,
     Insight,
     Medicine,
     Perception,
     Survival,
+    Deception,
     Intimidation,
     Performance,
     Persuasion,
+}
+pub fn get_ability_name(ability_id: AbilityScoreTypes) -> String{
+    match ability_id {
+        AbilityScoreTypes::Strength => "Strength".to_string(),
+        AbilityScoreTypes::Dexterity => "Dexterity".to_string(),
+        AbilityScoreTypes::Constitution => "Constitution".to_string(),
+        AbilityScoreTypes::Intellegence => "Intellegence".to_string(),
+        AbilityScoreTypes::Wisdom => "Wisdom".to_string(),
+        AbilityScoreTypes::Charisma => "Charisma".to_string(),
+    }
+}
+
+pub fn get_skill_name(skill_id: SkillTypes) -> String {
+    match  skill_id {
+        SkillTypes::Athletics => "Athletics".to_string(),
+        SkillTypes::Acrobatics => "Acrobatics".to_string(),
+        SkillTypes::SleightOfHand => "Sleight of Hand".to_string(),
+        SkillTypes::Stealth => "Stealth".to_string(),
+        SkillTypes::Arcana => "Arcana".to_string(),
+        SkillTypes::History => "History".to_string(),
+        SkillTypes::Investigation => "Investigation".to_string(),
+        SkillTypes::Nature => "Nature".to_string(),
+        SkillTypes::Religion => "Religion".to_string(),
+        SkillTypes::AnimalHandling => "Animal Handling".to_string(),
+        SkillTypes::Insight => "Insight".to_string(),
+        SkillTypes::Medicine => "Medicine".to_string(),
+        SkillTypes::Perception => "Perception".to_string(),
+        SkillTypes::Survival => "Survival".to_string(),
+        SkillTypes::Deception => "Deception".to_string(),
+        SkillTypes::Intimidation => "Intimidation".to_string(),
+        SkillTypes::Performance => "Performance".to_string(),
+        SkillTypes::Persuasion => "Persuasion".to_string(),
+    }
 }
 
 

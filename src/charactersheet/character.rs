@@ -32,7 +32,7 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
 
     impl Default for Character {
         fn default() -> Self {
-        Self { 
+        let character = Character { 
             name: "Tav".to_string(), 
             class:"Fighter".to_string(), 
             subclass:"".to_string(), 
@@ -55,23 +55,25 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
             skills: HashMap::from([
                     (SkillTypes::Athletics,Skill::new(0, AbilityScoreTypes::Strength)),
                     (SkillTypes::Acrobatics, Skill::new(0,AbilityScoreTypes::Dexterity)),
-                    (SkillTypes::SlightOfHand, Skill::new(0,AbilityScoreTypes::Dexterity)),
+                    (SkillTypes::SleightOfHand, Skill::new(0,AbilityScoreTypes::Dexterity)),
                     (SkillTypes::Stealth, Skill::new(0,AbilityScoreTypes::Dexterity)),
                     (SkillTypes::Arcana, Skill::new(0, AbilityScoreTypes::Intellegence)),
                     (SkillTypes::History, Skill::new(0, AbilityScoreTypes::Intellegence)),
                     (SkillTypes::Investigation, Skill::new(0, AbilityScoreTypes::Intellegence)),
                     (SkillTypes::Nature, Skill::new(0, AbilityScoreTypes::Intellegence)),
-                    (SkillTypes::Relgion, Skill::new(0, AbilityScoreTypes::Intellegence)),
+                    (SkillTypes::Religion, Skill::new(0, AbilityScoreTypes::Intellegence)),
                     (SkillTypes::AnimalHandling, Skill::new(0, AbilityScoreTypes::Wisdom)),
                     (SkillTypes::Insight, Skill::new(0, AbilityScoreTypes::Wisdom)),
                     (SkillTypes::Medicine, Skill::new(0, AbilityScoreTypes::Wisdom)),
                     (SkillTypes::Perception, Skill::new(0, AbilityScoreTypes::Wisdom)),
                     (SkillTypes::Survival, Skill::new(0, AbilityScoreTypes::Wisdom)),
                     (SkillTypes::Intimidation, Skill::new(0, AbilityScoreTypes::Wisdom)),
+                    (SkillTypes::Deception, Skill::new(0, AbilityScoreTypes::Charisma)),
                     (SkillTypes::Performance, Skill::new(0, AbilityScoreTypes::Charisma)),
                     (SkillTypes::Persuasion, Skill::new(0, AbilityScoreTypes::Charisma)),
             ]) 
-        }
+        };
+        return character;
     }
     }
 

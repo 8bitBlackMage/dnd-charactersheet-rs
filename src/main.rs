@@ -9,7 +9,7 @@ mod gui;
 
 
 use crate::charactersheet::character::Character;
-use crate::charactersheet::abilities::AbilityScoreTypes;
+use crate::charactersheet::abilities::{AbilityScoreTypes, SkillTypes};
 
 use crate::charactersheet::level;
 use crate::messages::Message;
@@ -76,6 +76,7 @@ impl Application {
     }
 
     fn view(&'_  self) -> Element<'_, messages::Message>{
+        use SkillTypes::*;
         column![
         gui::topbar::view(),
        row![
@@ -83,21 +84,21 @@ impl Application {
         container(gui::levelpanel::view(&self.character.level)).width(Length::FillPortion(1))
        ].height(300),
        row![
-        container(gui::stats::statpanel::view("Strength".to_string(), AbilityScoreTypes::Strength, &self.character))
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Strength, Vec::from([Athletics])))
             .width(Length::FillPortion(1)),
 
-        container(gui::stats::statpanel::view("Dexterity".to_string(),AbilityScoreTypes::Dexterity, &self.character))
+        container(gui::stats::statpanel::view(&self.character,AbilityScoreTypes::Dexterity,Vec::from([Acrobatics, SleightOfHand, Stealth])))
             .width(Length::FillPortion(1)),
 
-        container(gui::stats::statpanel::view("Constitution".to_string(),AbilityScoreTypes::Constitution, &self.character))
+        container(gui::stats::statpanel::view(&self.character,AbilityScoreTypes::Constitution,Vec::from([])))
             .width(Length::FillPortion(1)),
         ],
        row![
-        container(gui::stats::statpanel::view("Intellegence".to_string(), AbilityScoreTypes::Intellegence, &self.character))
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Intellegence,Vec::from([Arcana,History,Investigation,Nature,Religion])))
             .width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Wisdom".to_string(),AbilityScoreTypes::Wisdom, &self.character ))
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Wisdom, Vec::from([AnimalHandling,Insight,Medicine,Perception,Survival])))
             .width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view("Charisma".to_string(), AbilityScoreTypes::Charisma, &self.character))
+        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Charisma, Vec::from([Deception,Intimidation,Performance,Persuasion])))
             .width(Length::FillPortion(1)),
        ]
         ].into()
