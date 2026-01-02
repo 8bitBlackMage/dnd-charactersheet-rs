@@ -21,10 +21,9 @@ struct Application {
 impl Application {
 
     fn new() -> Self { 
-        Self{ character: Character::default(),
-    } 
+        Self{ character: Character::default()} 
+    }
     
-}
     fn update(&mut self, message: messages::Message)
     {
         match message
@@ -38,8 +37,17 @@ impl Application {
             Message::LevelChanged(level) => self.character.level.level_from_str(level),
             Message::ExperienceAdd(exp) => {self.character.level.add_experience(exp);} ,
             Message::ExperienceRemoved(_) => todo!(),
-            Message::SkillProficencyChanged(stat_type) => {},
-            Message::SkillExpertieseChanged(_) => {},
+            Message::SkillProficencyChanged(skill_id) => 
+            {
+                let mut skill = self.character.get_skill(skill_id);
+                skill.proficient = !skill.proficient;
+                self.character.set_skill(skill_id, skill);
+            },
+            Message::SkillExpertieseChanged(skill_id) => {
+                let mut skill = self.character.get_skill(skill_id);
+                skill.expert = !skill.expert;
+                self.character.set_skill(skill_id, skill);
+            },
         }
     }
 

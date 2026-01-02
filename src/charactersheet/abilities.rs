@@ -97,7 +97,7 @@ impl Skill {
         Skill { value: initial_value, proficient: false, expert: false, ability: ability_type }
     }
     pub fn get_modifier(&self) -> i8 {
-        calculate_modifier(self.value)
+        calculate_modifier(self.value) + if self.proficient{2} else {0} 
     }
     pub fn get_modifier_as_string(&self)-> String {
         get_modifier_as_string(self.get_modifier())

@@ -27,10 +27,10 @@ pub fn view( character: & Character, ability_id: AbilityScoreTypes,skill_ids: Ve
         rule::horizontal(2),
         column(skill_ids.iter().enumerate().map(
             |(_,skill_id)| {
-                skilldisplay::view(abilities::get_skill_name(*skill_id),character.get_skill(*skill_id))
+                skilldisplay::view(*skill_id, character.get_skill(*skill_id))
             }
         ))
 
         
-    ].width(250).spacing(10)).into()
+    ].width(270).spacing(10)).into()
 }

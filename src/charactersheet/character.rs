@@ -32,7 +32,7 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
 
     impl Default for Character {
         fn default() -> Self {
-        let character = Character { 
+        let mut  character = Character { 
             name: "Tav".to_string(), 
             class:"Fighter".to_string(), 
             subclass:"".to_string(), 
@@ -73,6 +73,7 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
                     (SkillTypes::Persuasion, Skill::new(0, AbilityScoreTypes::Charisma)),
             ]) 
         };
+        character.propogate_skill_changes();
         return character;
     }
     }
@@ -88,6 +89,12 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
             let _ = writer.write_all( serde_json::to_string_pretty(&self)?.as_bytes());
 
             Ok(())
+        }
+
+        pub fn propogate_skill_changes(&mut self){
+            for (_,skill) in self.skills.iter_mut() {
+                skill.value = self.abilities[&skill.ability].value;
+            }
         }
 
         pub fn load( file_path: &path::Path) -> Self {
@@ -106,8 +113,8 @@ use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
         pub fn get_skill(&self ,skill_id: SkillTypes) -> Skill {
             self.skills[&skill_id]
         }
-        pub fn set_skill(&mut self, skil_id: SkillTypes, skill: Skill){
-            self.skills.insert(skil_id,skill);
+        pub fn set_skill(&mut self, skill_id: SkillTypes, skill: Skill){
+            self.skills.insert(skill_id,skill);
         }
 
         //#TODO come back and handle skill propogation on change.

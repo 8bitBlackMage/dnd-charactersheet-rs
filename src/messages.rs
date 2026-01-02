@@ -1,4 +1,4 @@
-use crate::charactersheet::abilities::AbilityScoreTypes;
+use crate::charactersheet::abilities::SkillTypes;
 
 
 
@@ -13,8 +13,8 @@ pub enum Message {
     ExperienceAdd(i32),
     ExperienceRemoved(i32),
 
-    SkillProficencyChanged(AbilityScoreTypes),
-    SkillExpertieseChanged(AbilityScoreTypes),
+    SkillProficencyChanged(SkillTypes),
+    SkillExpertieseChanged(SkillTypes),
 
     SaveToFile,
     LoadFromFile,
