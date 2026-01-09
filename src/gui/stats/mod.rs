@@ -1,5 +1,5 @@
 
-pub mod statpanel;
+pub mod abilitypanel;
 
 
 pub mod skilldisplay;

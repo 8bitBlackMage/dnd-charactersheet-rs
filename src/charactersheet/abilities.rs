@@ -2,7 +2,7 @@
 
 use serde::{Deserialize, Serialize};
 
-use crate::charactersheet::level::{self, Level};
+use crate::charactersheet::level::Level;
 
 
 #[derive(Debug,PartialEq, Eq,Clone,Copy, Serialize,Deserialize,Hash)]

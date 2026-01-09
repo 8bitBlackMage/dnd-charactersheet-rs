@@ -97,21 +97,21 @@ impl Application {
         container(gui::levelpanel::view(&self.character.level)).width(Length::FillPortion(1))
        ].height(300),
        row![
-        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Strength, Vec::from([Athletics])))
+        container(gui::stats::abilitypanel::view(&self.character, AbilityScoreTypes::Strength, Vec::from([Athletics])))
             .width(Length::FillPortion(1)),
 
-        container(gui::stats::statpanel::view(&self.character,AbilityScoreTypes::Dexterity,Vec::from([Acrobatics, SleightOfHand, Stealth])))
+        container(gui::stats::abilitypanel::view(&self.character,AbilityScoreTypes::Dexterity,Vec::from([Acrobatics, SleightOfHand, Stealth])))
             .width(Length::FillPortion(1)),
 
-        container(gui::stats::statpanel::view(&self.character,AbilityScoreTypes::Constitution,Vec::from([])))
+        container(gui::stats::abilitypanel::view(&self.character,AbilityScoreTypes::Constitution,Vec::from([])))
             .width(Length::FillPortion(1)),
         ],
        row![
-        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Intellegence,Vec::from([Arcana,History,Investigation,Nature,Religion])))
+        container(gui::stats::abilitypanel::view(&self.character, AbilityScoreTypes::Intellegence,Vec::from([Arcana,History,Investigation,Nature,Religion])))
             .width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Wisdom, Vec::from([AnimalHandling,Insight,Medicine,Perception,Survival])))
+        container(gui::stats::abilitypanel::view(&self.character, AbilityScoreTypes::Wisdom, Vec::from([AnimalHandling,Insight,Medicine,Perception,Survival])))
             .width(Length::FillPortion(1)),
-        container(gui::stats::statpanel::view(&self.character, AbilityScoreTypes::Charisma, Vec::from([Deception,Intimidation,Performance,Persuasion])))
+        container(gui::stats::abilitypanel::view(&self.character, AbilityScoreTypes::Charisma, Vec::from([Deception,Intimidation,Performance,Persuasion])))
             .width(Length::FillPortion(1)),
        ]
         ].into()
