@@ -1,5 +1,5 @@
 use crate::charactersheet::abilities;
-use crate::Message;
+use crate::messages::Message;
 
 use iced::{Element, Length::{self}, widget::{row, text,checkbox,space}};
 

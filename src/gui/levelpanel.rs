@@ -3,8 +3,8 @@ use iced::Length;
 use iced::widget::{button, column, row, text, text_input};
 use iced_aw::widgets::LabeledFrame;
 
-use crate::level;
-use crate::Message;
+use crate::charactersheet::level;
+use crate::messages::Message;
 
 
 

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 
 use std::{fs::File, io::{self, BufReader, BufWriter, Write}, path};
 use crate::charactersheet::abilities::*;
-use crate::{charactersheet::{abilities::{Skill, Ability}}, level};
+use crate::charactersheet::{abilities::{Skill, Ability},level};
 
     #[derive(Debug, Serialize, Deserialize)]
     pub struct Character {

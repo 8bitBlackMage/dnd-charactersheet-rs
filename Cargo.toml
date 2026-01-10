@@ -4,6 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+gio = "0.21.5"
+gtk = { version = "0.10", package = "gtk4", features = ["gnome_46"] }
 iced = {version = "0.14.0",features = ["advanced", "svg"]}
 iced_aw = { version = "0.13.0", features = ["full"] }
 rfd = "0.16.0"
